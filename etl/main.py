@@ -1,8 +1,6 @@
 # Esse projeto foi feito com o objetivo educativo para a matéria de Programção para Ciência dos dados
 import numpy as np
 import pandas as pd 
-import seaborn as sns
-import matplotlib.pyplot as plt
 
 def main():
     pass
