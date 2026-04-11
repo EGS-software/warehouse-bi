@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  # 1. Nosso Data Warehouse
+  postgres_dw:
+    image: postgres:15
+    container_name: dw_siasus_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: dw_siasus
+    ports:
+      - "5432:5432"
+    volumes:
+      # Mantém os dados salvos mesmo se o contêiner cair
+      - postgres_data:/var/lib/postgresql/data 
+
+  # 2. Nosso Job de ETL em Python
+  etl_job:
+    build: 
+      context: ./etl  # Aponta para a pasta onde está o Dockerfile do Python
+    container_name: python_etl
+    depends_on:
+      - postgres_dw # Garante que o banco suba ANTES do Python tentar conectar
+    volumes:
+      # Mapeia sua pasta etl para dentro do contêiner para facilitar o desenvolvimento
+      - ./etl:/app 
+
+volumes:
+  postgres_data:
