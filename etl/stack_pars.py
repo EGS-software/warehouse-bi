@@ -1,26 +1,28 @@
 import pandas as pd
+import os
 
-# 1. Definimos a lista com os nomes dos arquivos que você tem
-arquivos_pars = ['data/PARS2501.csv', 'data/PARS2505.csv', 'data/PARS2508.csv']
+# 1. Como a pasta 'data' agora está JUNTO com o script dentro de 'etl':
+diretorio_script = os.path.dirname(os.path.abspath(__file__))
+pasta_dados = os.path.join(diretorio_script, 'data')
 
-# 2. Criamos uma lista vazia para armazenar os dados temporariamente
+# 2. Arquivos
+arquivos_pars = ['PARS2501.csv', 'PARS2505.csv', 'PARS2508.csv']
 lista_de_dataframes = []
 
-# 3. Lemos cada arquivo e adicionamos à lista
+# 3. Leitura e Concatenação
 for arquivo in arquivos_pars:
-    print(f"Lendo {arquivo}...")
+    caminho_completo = os.path.join(pasta_dados, arquivo)
+    print(f"Lendo {caminho_completo}...")
     
-    # DICA: Verifique qual é o separador do seu CSV. 
-    # Dados do governo/DATASUS costumam usar ponto e vírgula (sep=';').
-    # Se der erro de "coluna única", mude para sep=','
-    df_temp = pd.read_csv(arquivo, sep=';', low_memory=False) 
+    # A SOLUÇÃO ESTÁ AQUI: Adicionamos o encoding='latin1'
+    df_temp = pd.read_csv(caminho_completo, sep=';', encoding='latin1', low_memory=False) 
     
     lista_de_dataframes.append(df_temp)
 
-# 4. Concatenamos tudo de uma vez só
-print("Empilhando os dados...")
+# 4. Empilhando
+print("\nEmpilhando os dados...")
 df_fato = pd.concat(lista_de_dataframes, ignore_index=True)
 
-# 5. Verificamos o resultado final
-print(f"Pronto! Sua tabela Fato agora tem {len(df_fato)} linhas.")
-display(df_fato.head())
+# 5. Verificando
+print(f"Pronto! Sua tabela Fato agora tem {len(df_fato)} linhas.\n")
+print(df_fato.head())
