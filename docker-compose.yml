@@ -1,4 +1,4 @@
-version: '3.8'
+
 
 services:
   # 1. Nosso Data Warehouse
@@ -14,14 +14,25 @@ services:
     volumes:
       # Mantém os dados salvos mesmo se o contêiner cair
       - postgres_data:/var/lib/postgresql/data 
+    # O Healthcheck força o Docker a fazer ping no banco até ele responder
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d dw_siasus"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   # 2. Nosso Job de ETL em Python
   etl_job:
     build: 
       context: ./etl  # Aponta para a pasta onde está o Dockerfile do Python
     container_name: python_etl
+    environment:
+      # Isso impede o Python de esconder os logs. Os prints saem na hora!
+      - PYTHONUNBUFFERED=1
     depends_on:
-      - postgres_dw # Garante que o banco suba ANTES do Python tentar conectar
+      postgres_dw:
+        # Agora ele só liga o Python quando o banco passar no teste do healthcheck
+        condition: service_healthy
     volumes:
       # Mapeia sua pasta etl para dentro do contêiner para facilitar o desenvolvimento
       - ./etl:/app 
