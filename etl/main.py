@@ -16,9 +16,6 @@ def main():
     print("Extraindo e empilhando dados de Produção Ambulatorial (Fato)...")
     df_fato_bruto = parse_stack(pasta_dados=pasta_dados, arquivos_pars=arquivos_pars)
     
-    print("Extraindo e empilhando dados de Produção Ambulatorial (Fato)...")
-    df_fato_bruto = parse_stack(pasta_dados=pasta_dados, arquivos_pars=arquivos_pars)
-    
     # ADICIONE ESTA LINHA PARA DESCOBRIR O NOME REAL DAS COLUNAS:
     print("\nNomes reais das colunas no arquivo:")
     print(df_fato_bruto.columns.tolist())
