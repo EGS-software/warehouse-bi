@@ -26,11 +26,11 @@ def carregar_dimensao(df, nome_tabela, colunas_renomear, engine):
     df_dimensao.to_sql(nome_tabela, engine, if_exists='replace', index=False)
     print(f"{nome_tabela} carregada com sucesso!")
 
-def carregar_fato(df_fato_limpo, colunas_renomear, engine):
+def carregar_fato(df_fato_limpo, colunas_renomear, engine, modo='replace'):
     """
     Carrega a tabela fato principal.
     """
     print("Carregando Fato_Producao...")
     df_fato = df_fato_limpo[list(colunas_renomear.keys())].rename(columns=colunas_renomear)
-    df_fato.to_sql('fato_producao', engine, if_exists='replace', index=False)
+    df_fato.to_sql('fato_producao', engine, if_exists=modo, index=False)
     print("Fato_Producao carregada com sucesso!")
