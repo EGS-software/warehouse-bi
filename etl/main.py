@@ -31,19 +31,25 @@ def main():
     # 3. Configurar Conexão com o Banco de Dados
     engine = get_db_engine()
     
-    # 4. Lendo os arquivos auxiliares (Dimensões) do disco
+   # 4. Lendo os arquivos auxiliares (Dimensões) do disco
     print("\nLendo arquivos auxiliares do disco...")
     
-    # low_memory=False ajuda a evitar avisos de tipos de dados misturados durante a leitura
-    df_municipios = pd.read_csv(os.path.join(pasta_dados, 'tb_municip.csv'), sep=';', encoding='latin1', low_memory=False)
-    df_procedimentos = pd.read_csv(os.path.join(pasta_dados, 'TB_SIGTAW.csv'), sep=';', encoding='latin1', low_memory=False)
-    df_cid = pd.read_csv(os.path.join(pasta_dados, 'S_CID.csv'), sep=';', encoding='latin1', low_memory=False)
-    df_cbo = pd.read_csv(os.path.join(pasta_dados, 'CBO.csv'), sep=';', encoding='latin1', low_memory=False)
+    print("Lendo Municípios...")
+    df_municipios = pd.read_csv(os.path.join(pasta_dados, 'tb_municip.csv'), sep=',', encoding='latin1', low_memory=False)
     
-    # ATENÇÃO: Verifique se o arquivo que contém FANTASIA e RAZ_SOCI é o CADGERRS.csv mesmo. 
-    # Se for outro nome na sua pasta, ajuste o nome do arquivo abaixo.
-    df_estabelecimentos = pd.read_csv(os.path.join(pasta_dados, 'CADGERRS.csv'), sep=';', encoding='latin1', low_memory=False)
+    print("Lendo Procedimentos...")
+    df_procedimentos = pd.read_csv(os.path.join(pasta_dados, 'TB_SIGTAW.csv'), sep=',', encoding='latin1', low_memory=False)
+    
+    print("Lendo CID...")
+    df_cid = pd.read_csv(os.path.join(pasta_dados, 'S_CID.csv'), sep=',', encoding='latin1', low_memory=False)
+    
+    print("Lendo CBO...")
+    df_cbo = pd.read_csv(os.path.join(pasta_dados, 'CBO.csv'), sep=',', encoding='latin1', low_memory=False)
+    
+    print("Lendo Estabelecimentos (CADGERRS)...")
+    df_estabelecimentos = pd.read_csv(os.path.join(pasta_dados, 'CADGERRS.csv'), sep=',', encoding='latin1', low_memory=False)
 
+    
     # 5. Carga das Dimensões no PostgreSQL
     print("\nIniciando carga das Dimensões...")
     
