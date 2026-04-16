@@ -37,5 +37,17 @@ services:
       # Mapeia sua pasta etl para dentro do contêiner para facilitar o desenvolvimento
       - ./etl:/app 
 
+  # 3. Configuração do Metabase
+  metabase:
+    image: metabase/metabase:latest
+    container_name: metabase_bi
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres_dw
+    volumes:
+      - metabase_data:/metabase.db
+
 volumes:
   postgres_data:
+  metabase_data:
