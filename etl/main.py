@@ -38,6 +38,7 @@ def main():
     arquivos_pars = ['PARS2501.csv', 'PARS2505.csv', 'PARS2508.csv']
     
     dicionario_colunas_fato = {
+        'PA_CMP': 'competencia',
         'PA_MUNPCN': 'id_municipio',
         'PA_PROC_ID': 'id_procedimento',
         'PA_CODUNI': 'id_cnes',
