@@ -20,13 +20,21 @@ def main():
     # ---------------------------------------------------------
     print("Lendo arquivos auxiliares (Dimensões) do disco...")
     df_municipios = pd.read_csv(os.path.join(pasta_dados, 'tb_municip.csv'), sep=',', encoding='latin1', low_memory=False)
+    df_regioes = pd.read_csv(os.path.join(pasta_dados, 'regioes_saude.csv'), sep=',', encoding='utf-8')
+    df_municipios_enriquecido = pd.merge(
+        df_municipios, 
+        df_regioes, 
+        left_on='CO_MUNICIP',   # Código IBGE na tabela do DATASUS
+        right_on='CódigoIBGE',     # Código IBGE na planilha
+        how='left'              # Mantém todos os municípios, mesmo os que não acharem região
+    )
     df_procedimentos = pd.read_csv(os.path.join(pasta_dados, 'TB_SIGTAW.csv'), sep=',', encoding='latin1', low_memory=False)
     df_cid = pd.read_csv(os.path.join(pasta_dados, 'S_CID.csv'), sep=',', encoding='latin1', low_memory=False)
     df_cbo = pd.read_csv(os.path.join(pasta_dados, 'CBO.csv'), sep=',', encoding='latin1', low_memory=False)
     df_estabelecimentos = pd.read_csv(os.path.join(pasta_dados, 'CADGERRS.csv'), sep=',', encoding='latin1', low_memory=False)
 
     print("\nIniciando carga das Dimensões no banco...")
-    carregar_dimensao(df_municipios, 'dim_municipio', {'CO_MUNICIP': 'id_municipio', 'DS_NOME': 'nome_municipio', 'CO_UF': 'uf'}, engine)
+    carregar_dimensao(df_municipios_enriquecido, 'dim_municipio', {'CO_MUNICIP': 'id_municipio', 'DS_NOME': 'nome_municipio', 'CO_UF': 'uf', 'Região de Saúde' : 'regiao_saude', 'Macrorregião de Saúde': 'macrorregiao_saude'}, engine)
     carregar_dimensao(df_procedimentos, 'dim_procedimento', {'IP_COD': 'id_procedimento', 'IP_DSCR': 'nome_procedimento'}, engine)
     carregar_dimensao(df_cid, 'dim_diagnostico', {'CD_COD': 'id_cid', 'CD_DESCR': 'descricao_cid'}, engine)
     carregar_dimensao(df_cbo, 'dim_ocupacao', {'CBO': 'id_cbo', 'DS_CBO': 'nome_ocupacao'}, engine)
